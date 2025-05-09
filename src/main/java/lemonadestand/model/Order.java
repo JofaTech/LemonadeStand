@@ -1,6 +1,7 @@
 package lemonadestand.model;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Order {
 
@@ -39,5 +40,34 @@ public class Order {
 	public double getTotal() {
 		return total;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(lemonades);
+		result = prime * result + Objects.hash(customer, total);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Order other = (Order) obj;
+		return Objects.equals(customer, other.customer) && Arrays.equals(lemonades, other.lemonades)
+				&& Double.doubleToLongBits(total) == Double.doubleToLongBits(other.total);
+	}
+
+	@Override
+	public String toString() {
+		return "Order [customer=" + customer + ", lemonades=" + Arrays.toString(lemonades) + ", total=" + total + "]";
+	}
+	
+	
 	
 }
