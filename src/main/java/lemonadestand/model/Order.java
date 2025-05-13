@@ -1,39 +1,42 @@
 package lemonadestand.model;
 
-import java.util.Arrays;
-import java.util.Objects;
+//import java.util.ArrayList;
+import java.util.HashSet;
+//import java.util.List;
+import java.util.Set;
 
 public class Order {
 
 	private Customer customer;
-	private Lemonade[] lemonades;
+	// private List<Lemonade> lemonades;
+	private Set<Lemonade> lemonades;
 	private double total;
-	
+
 	public Order(Customer customer) {
 		super();
 		this.customer = customer;
-		lemonades = new Lemonade[0]; 
-	}
-	
-	private void updateTotal() {
+		lemonades = new HashSet<>();
 		total = 0.0;
+	}
+
+	public void addLemonade(Lemonade lemonade) {
+		if (lemonades.add(lemonade)) {
+			total += lemonade.getPrice();
+		}
+	}
+
+	public void addLemonades(Set<Lemonade> lemonades) {
+		this.lemonades.addAll(lemonades);
 		for (Lemonade l : lemonades) {
 			total += l.getPrice();
 		}
-	}
-	
-	public void addLemonade(Lemonade lemonade) {
-		Lemonade[] newLemonadeArray = Arrays.copyOf(lemonades, lemonades.length + 1);		
-		newLemonadeArray[newLemonadeArray.length - 1] = lemonade;
-		lemonades = newLemonadeArray;
-		updateTotal();
 	}
 
 	public Customer getCustomer() {
 		return customer;
 	}
 
-	public Lemonade[] getLemonades() {
+	public Set<Lemonade> getLemonades() {
 		return lemonades;
 	}
 
@@ -45,8 +48,8 @@ public class Order {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(lemonades);
-		result = prime * result + Objects.hash(customer, total);
+		result = prime * result + lemonades.hashCode();
+		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		return result;
 	}
 
@@ -59,15 +62,13 @@ public class Order {
 		if (getClass() != obj.getClass())
 			return false;
 		Order other = (Order) obj;
-		return Objects.equals(customer, other.customer) && Arrays.equals(lemonades, other.lemonades)
+		return customer.equals(other.customer) && lemonades.equals(other.getLemonades())
 				&& Double.doubleToLongBits(total) == Double.doubleToLongBits(other.total);
 	}
 
 	@Override
 	public String toString() {
-		return "Order [customer=" + customer + ", lemonades=" + Arrays.toString(lemonades) + ", total=" + total + "]";
+		return "Order [customer=" + customer + ", lemonades=" + lemonades.toString() + ", total=" + total + "]";
 	}
-	
-	
-	
+
 }

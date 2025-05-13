@@ -35,6 +35,20 @@ public class Application {
 		
 		System.out.println("Order 2 Customer Name: " + order2.getCustomer().getName());
 		System.out.println("Order 2 Total Price: $" + order2.getTotal());
+		
+		Box<Order> b1 = new Box<Order>(order1);
+		Box<Customer> b2 = new Box<Customer>(customer2);
+		
+		b1.setObj(order2);
+		
+		b1.getObj().addLemonade(new Lemonade(2, 1.5, 1.75, 5));
+		
+		b2.setObj(customer1);
+		
+		System.out.println(b1.getObj());
+		System.out.println(b2.getObj());
+		
+		b2.printValue(customer2, order1);
 
 	}
 
