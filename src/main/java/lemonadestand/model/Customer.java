@@ -22,7 +22,7 @@ public class Customer implements Person {
 
 	@Override
 	public String toString() {
-		return "Customer [name=" + name + ", phoneNumber=" + phoneNumber + "]";
+		return "Customer {name=" + name + ", phoneNumber=" + phoneNumber + "}";
 	}
 
 	@Override

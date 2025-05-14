@@ -72,8 +72,8 @@ public class Lemonade {
 
 	@Override
 	public String toString() {
-		return "Lemonade [lemonJuice=" + lemonJuice + ", water=" + water + ", sugar=" + sugar + ", iceCubes=" + iceCubes
-				+ ", CUP=" + CUP + ", price=" + price + "]";
+		return "Lemonade {lemonJuice=" + lemonJuice + ", water=" + water + ", sugar=" + sugar + ", iceCubes=" + iceCubes
+				+ ", CUP=" + CUP + ", price=" + price + "}";
 	}
 	
 	
