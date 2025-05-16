@@ -4,6 +4,11 @@ import java.util.Objects;
 
 public class Customer implements Person {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3794595415717863667L;
+	
 	private String name;
 	private String phoneNumber;
 	
