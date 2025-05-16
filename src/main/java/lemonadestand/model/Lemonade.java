@@ -3,6 +3,8 @@ package lemonadestand.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Lemonade implements Serializable {
 
 	/**
@@ -14,9 +16,16 @@ public class Lemonade implements Serializable {
 	private double water;
 	private double sugar;
 	private int iceCubes;
-	private final int CUP = 1;
 	private double price;
 	
+	// Ignore the CUP variable for .json deserialization (through Jackson)
+	@JsonIgnore
+	private final int CUP = 1;
+	
+	
+	public Lemonade() {
+	}
+
 	public Lemonade(double lemonJuice, double water, double sugar, int iceCubes) {
 		super();
 		this.lemonJuice = lemonJuice;
@@ -42,6 +51,7 @@ public class Lemonade implements Serializable {
 		return iceCubes;
 	}
 
+	@JsonIgnore
 	public int getCUP() {
 		return CUP;
 	}
@@ -49,8 +59,31 @@ public class Lemonade implements Serializable {
 	public double getPrice() {
 		return price;
 	}
-
 	
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setLemonJuice(double lemonJuice) {
+		this.lemonJuice = lemonJuice;
+	}
+
+	public void setWater(double water) {
+		this.water = water;
+	}
+
+	public void setSugar(double sugar) {
+		this.sugar = sugar;
+	}
+
+	public void setIceCubes(int iceCubes) {
+		this.iceCubes = iceCubes;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(CUP, iceCubes, lemonJuice, price, sugar, water);

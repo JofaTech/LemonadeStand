@@ -17,12 +17,28 @@ public class Customer implements Person {
 		this.phoneNumber = phoneNumber;
 	}
 	
+	// Empty constructor as required by Jackson (for .json object deserialization)
+	public Customer() {
+	}
+
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 	
 	public String getName() {
 		return name;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	@Override

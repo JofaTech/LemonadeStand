@@ -1,0 +1,1 @@
+{"customer":{"name":"Joe Bob","phoneNumber":"5552221234"},"lemonades":[{"lemonJuice":2.0,"water":5.0,"sugar":1.5,"iceCubes":6,"price":1.325,"cup":1},{"lemonJuice":1.5,"water":5.0,"sugar":2.0,"iceCubes":8,"price":1.25,"cup":1},{"lemonJuice":1.75,"water":4.0,"sugar":2.5,"iceCubes":10,"price":1.4,"cup":1}],"total":3.975}
