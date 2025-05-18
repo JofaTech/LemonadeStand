@@ -1,4 +1,4 @@
-package lemonadestand.model;
+package lemonadestand.entity;
 
 import java.util.Objects;
 
@@ -9,6 +9,7 @@ public class Customer implements Person {
 	 */
 	private static final long serialVersionUID = -3794595415717863667L;
 	
+	private Integer id;
 	private String name;
 	private String phoneNumber;
 	
@@ -19,6 +20,12 @@ public class Customer implements Person {
 	
 	// Empty constructor as required by Jackson (for .json object deserialization)
 	public Customer() {
+	}
+
+	public Customer(Integer id, String name, String phoneNumber) {
+		this.id = id;
+		this.name = name;
+		this.phoneNumber = phoneNumber;
 	}
 
 	public String getPhoneNumber() {
@@ -39,6 +46,14 @@ public class Customer implements Person {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	@Override

@@ -10,9 +10,13 @@ import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lemonadestand.model.Customer;
-import lemonadestand.model.Lemonade;
-import lemonadestand.model.Order;
+import lemonadestand.dao.CustomerDAO;
+import lemonadestand.dao.LemonadeDAO;
+import lemonadestand.dao.LemonadeStandDAO;
+import lemonadestand.dao.OrderDAO;
+import lemonadestand.entity.Customer;
+import lemonadestand.entity.Lemonade;
+import lemonadestand.entity.Order;
 
 public class Application {
 
@@ -51,65 +55,40 @@ public class Application {
 
 		System.out.println("Great! Let's get to your order then...");
 
-		Customer customer = new Customer(name, phoneNumber);
-		Order order = new Order(customer);
+		CustomerDAO customerDAO = new CustomerDAO();
+		OrderDAO orderDAO = new OrderDAO();
+		LemonadeDAO lemonadeDAO = new LemonadeDAO();
+		LemonadeStandDAO lemonadeStandDAO = new LemonadeStandDAO();
 
-		System.out.println("How many lemonades would you like to order?");
-		int numberOfLemonades = scanner.nextInt();
+		Customer customer = customerDAO.createCustomer(new Customer(name, phoneNumber));
 
-		for (int i = 0; i < numberOfLemonades; i++) {
-			System.out.println("\nLet's get the details of Lemonade #" + (i + 1) + "...");
-			System.out.println("How much lemon juice do you want (in cups)?");
-			double lemonJuice = scanner.nextDouble();
-			System.out.println("How much water do you want (in cups)?");
-			double water = scanner.nextDouble();
-			System.out.println("How much sugar do you want (in cups)?");
-			double sugar = scanner.nextDouble();
-			System.out.println("How many ice cubes do you want?");
-			int iceCubes = scanner.nextInt();
+		Order order = orderDAO.createOrder(new Order(customer, lemonadeStandDAO.getLemonadeStand(1)));
 
-			order.addLemonade(new Lemonade(lemonJuice, water, sugar, iceCubes));
+		if (order != null) {
+			System.out.println("How many lemonades would you like to order?");
+			int numberOfLemonades = scanner.nextInt();
+
+			for (int i = 0; i < numberOfLemonades; i++) {
+				System.out.println("\nLet's get the details of Lemonade #" + (i + 1) + "...");
+				System.out.println("How much lemon juice do you want (in cups)?");
+				double lemonJuice = scanner.nextDouble();
+				System.out.println("How much water do you want (in cups)?");
+				double water = scanner.nextDouble();
+				System.out.println("How much sugar do you want (in cups)?");
+				double sugar = scanner.nextDouble();
+				System.out.println("How many ice cubes do you want?");
+				int iceCubes = scanner.nextInt();
+
+				order.addLemonade(lemonadeDAO.createLemonade(new Lemonade(lemonJuice, water, sugar, iceCubes, order)));
+				orderDAO.updateOrder(order);
+			}
+
+			System.out.println("Successfully placed order for " + name + ".");
+			System.out.println("Your order total is: $" + order.getTotal());
+			System.out.println("Please be ready to pay when you pick up your order. Thank you!!");
 		}
 
-		// Save the order somewhere
-		File file = new File("./orders");
-
-		File[] files = file.listFiles();
-
-//		FileOutputStream fileOutputStream = null;
-//		ObjectOutputStream objectOutputStream = null;
-//		
-//		try {
-//			fileOutputStream = new FileOutputStream(file + "/order" + (files.length + 1) + ".txt");
-//			objectOutputStream = new ObjectOutputStream(fileOutputStream);
-//
-//			objectOutputStream.writeObject(order);
-//		} catch (IOException e) {
-//			System.out.println("Failed to create file. Please ensure orders directory exists.");
-//		} finally {
-//			try {
-//				if (fileOutputStream != null) {
-//					fileOutputStream.close();
-//				}
-//				if (objectOutputStream != null) {
-//					objectOutputStream.close();
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			objectMapper.writeValue(new File(file + "/order" + (files.length + 1) + ".json"), order);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		System.out.println("Successfully placed order for " + name + ".");
-		System.out.println("Your order total is: $" + order.getTotal());
-		System.out.println("Please be ready to pay when you pick up your order. Thank you!!");
+		scanner.close();
 
 	}
 

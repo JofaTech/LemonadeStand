@@ -1,4 +1,4 @@
-package lemonadestand.model;
+package lemonadestand.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,11 +12,13 @@ public class Lemonade implements Serializable {
 	 */
 	private static final long serialVersionUID = -6858462398572875916L;
 	
+	private Integer id;
 	private double lemonJuice;
 	private double water;
 	private double sugar;
 	private int iceCubes;
 	private double price;
+	private Order order;
 	
 	// Ignore the CUP variable for .json deserialization (through Jackson)
 	@JsonIgnore
@@ -26,13 +28,24 @@ public class Lemonade implements Serializable {
 	public Lemonade() {
 	}
 
-	public Lemonade(double lemonJuice, double water, double sugar, int iceCubes) {
+	public Lemonade(double lemonJuice, double water, double sugar, int iceCubes, Order order) {
 		super();
 		this.lemonJuice = lemonJuice;
 		this.water = water;
 		this.sugar = sugar;
 		this.iceCubes = iceCubes;
+		this.order = order;
 		price = (lemonJuice * 0.3) + (sugar * 0.15) + (CUP * 0.5);
+	}
+
+	public Lemonade(Integer id, double lemonJuice, double price, double sugar, int iceCubes, double water, Order order) {
+		this.id = id;
+		this.lemonJuice = lemonJuice;
+		this.price = price;
+		this.sugar = sugar;
+		this.iceCubes = iceCubes;
+		this.water = water;
+		this.order = order;
 	}
 
 	public double getLemonJuice() {
@@ -82,6 +95,22 @@ public class Lemonade implements Serializable {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	@Override
