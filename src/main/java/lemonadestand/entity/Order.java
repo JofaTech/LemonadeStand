@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Order implements Serializable {
+public class Order implements Serializable, Entity {
 	
 	/**
 	 * 
@@ -38,6 +38,11 @@ public class Order implements Serializable {
 		this.total = total;
 		this.customer = customer;
 		this.lemonadeStand = lemonadeStand;
+	}
+
+	public Order(int id, double total) {
+		this.id = id;
+		this.total = total;
 	}
 
 	public void addLemonade(Lemonade lemonade) {

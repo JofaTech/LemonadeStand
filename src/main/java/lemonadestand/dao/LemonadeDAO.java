@@ -1,15 +1,14 @@
 package lemonadestand.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import lemonadestand.entity.Lemonade;
+import lemonadestand.entity.Order;
 
-public class LemonadeDAO {
+public class LemonadeDAO implements BaseDAO<Lemonade> {
 
 	public LemonadeDAO() {
 		try {
@@ -19,39 +18,36 @@ public class LemonadeDAO {
 		}
 	}
 
-	private Connection getDBConnection() throws SQLException {
-		return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "bondstone");
+	@Override
+	public PreparedStatement preparedCreateStatement(Lemonade lemonade) throws SQLException {
+		PreparedStatement createLemonadeStatement = getDBConnection().prepareStatement(
+				"INSERT INTO lemonade (\"lemonJuice\", water, \"iceCubes\", sugar, price, order_id) VALUES (?, ?, ?, ?, ?, ?)",
+				Statement.RETURN_GENERATED_KEYS);
+		createLemonadeStatement.setDouble(1, lemonade.getLemonJuice());
+		createLemonadeStatement.setDouble(2, lemonade.getWater());
+		createLemonadeStatement.setInt(3, lemonade.getIceCubes());
+		createLemonadeStatement.setDouble(4, lemonade.getSugar());
+		createLemonadeStatement.setDouble(5, lemonade.getPrice());
+		createLemonadeStatement.setInt(6, lemonade.getOrder().getId());
+		return createLemonadeStatement;
 	}
 
-	public Lemonade createLemonade(Lemonade lemonade) {
+	@Override
+	public Lemonade constructObject(Integer id, Lemonade lemonade) {
+		return new Lemonade(id, lemonade.getLemonJuice(), lemonade.getPrice(), lemonade.getSugar(),
+				lemonade.getIceCubes(), lemonade.getWater(), lemonade.getOrder());
+	}
 
-		try (PreparedStatement createLemonadeStatement = getDBConnection().prepareStatement(
-				"INSERT INTO lemonade (\"lemonJuice\", water, \"iceCubes\", sugar, price, order_id) VALUES (?, ?, ?, ?, ?, ?)",
-				Statement.RETURN_GENERATED_KEYS);) {
-			createLemonadeStatement.setDouble(1, lemonade.getLemonJuice());
-			createLemonadeStatement.setDouble(2, lemonade.getWater());
-			createLemonadeStatement.setInt(3, lemonade.getIceCubes());
-			createLemonadeStatement.setDouble(4, lemonade.getSugar());
-			createLemonadeStatement.setDouble(5, lemonade.getPrice());
-			createLemonadeStatement.setInt(6, lemonade.getOrder().getId());
-			int created = createLemonadeStatement.executeUpdate();
-			if (created == 0) {
-				throw new SQLException();
-			}
-			ResultSet resultSet = createLemonadeStatement.getGeneratedKeys();
-			if (resultSet.next()) {
-				return new Lemonade(resultSet.getInt(1), lemonade.getLemonJuice(), lemonade.getPrice(),
-						lemonade.getSugar(), lemonade.getIceCubes(), lemonade.getWater(), lemonade.getOrder());
-			} else {
-				throw new SQLException();
-			}
+	@Override
+	public PreparedStatement preparedReadStatement(int id) throws SQLException {
+		PreparedStatement getLemonadeById = getDBConnection().prepareStatement("SELECT L.id as \"lemonade_id\", L.\"lemonJuic\", L.water, L.sugar, L.price, L.\"iceCubes\", OT.id as \"order_id\", OT.total FROM lemonade as L JOIN order_table as OT ON L.order_id = OT.id WHERE id=?");
+		getLemonadeById.setInt(1, id);
+		return getLemonadeById;
+	}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("Unable to create lemonade.");
-		}
-
-		return null;
+	@Override
+	public Lemonade constructObject(ResultSet resultSet) throws SQLException {
+		return new Lemonade(resultSet.getInt("lemonade_id"), resultSet.getDouble("lemonJuice"), resultSet.getDouble("price"), resultSet.getDouble("sugar"), resultSet.getInt("iceCubes"), resultSet.getDouble("water"), new Order(resultSet.getInt("order_id"), resultSet.getDouble("total"));
 	}
 
 }

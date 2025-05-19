@@ -2,7 +2,7 @@ package lemonadestand.entity;
 
 import java.util.Objects;
 
-public class Customer implements Person {
+public class Customer implements Person, Entity {
 	
 	/**
 	 * 

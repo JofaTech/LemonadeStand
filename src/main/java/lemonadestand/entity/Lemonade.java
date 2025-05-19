@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Lemonade implements Serializable {
+public class Lemonade implements Serializable, Entity {
 
 	/**
 	 * 

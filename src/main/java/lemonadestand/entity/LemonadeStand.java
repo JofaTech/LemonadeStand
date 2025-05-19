@@ -1,6 +1,6 @@
 package lemonadestand.entity;
 
-public class LemonadeStand {
+public class LemonadeStand implements Entity {
 
 	private Integer id;
 	private String name;

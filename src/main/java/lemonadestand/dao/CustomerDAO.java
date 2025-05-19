@@ -1,7 +1,5 @@
 package lemonadestand.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +7,7 @@ import java.sql.Statement;
 
 import lemonadestand.entity.Customer;
 
-public class CustomerDAO {
+public class CustomerDAO implements BaseDAO<Customer> {
 
 	public CustomerDAO() {
 		try {
@@ -19,31 +17,29 @@ public class CustomerDAO {
 		}
 	}
 
-	private Connection getDBConnection() throws SQLException {
-		return DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "bondstone");
+	@Override
+	public PreparedStatement preparedCreateStatement(Customer customer) throws SQLException {
+		PreparedStatement createCustomerStatement = getDBConnection().prepareStatement(
+				"INSERT INTO customer (name, \"phoneNumber\") VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+		createCustomerStatement.setString(1, customer.getName());
+		createCustomerStatement.setString(2, customer.getPhoneNumber());
+		return createCustomerStatement;
 	}
 
-	public Customer createCustomer(Customer customer) {
+	@Override
+	public Customer constructObject(Integer id, Customer customer) {
+		return new Customer(id, customer.getName(), customer.getPhoneNumber());
+	}
 
-		try (PreparedStatement createCustomerStatement = getDBConnection().prepareStatement(
-				"INSERT INTO customer (name, \"phoneNumber\") VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);) {
-			createCustomerStatement.setString(1, customer.getName());
-			createCustomerStatement.setString(2, customer.getPhoneNumber());
-			int created = createCustomerStatement.executeUpdate();
-			if (created == 0) {
-				throw new SQLException();
-			}
-			ResultSet resultSet = createCustomerStatement.getGeneratedKeys();
-			if (resultSet.next()) {
-				return new Customer(resultSet.getInt(1), customer.getName(), customer.getPhoneNumber());
-			} else {
-				throw new SQLException();
-			}
+	@Override
+	public PreparedStatement preparedReadStatement(int id) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-		} catch (SQLException e) {
-			System.out.println("Unable to create new customer.");
-		}
-
+	@Override
+	public Customer constructObject(ResultSet resultSet) throws SQLException {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }
